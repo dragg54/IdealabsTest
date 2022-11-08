@@ -22,4 +22,5 @@ password: ajibola400
                <li>delete group</li>
                 <li>add member</li>
                  <li>remove member</li>
+   <li>add role to user</li>
 </ul>
