@@ -73,7 +73,7 @@ exports.getAllUserRecord = (req, res) => {
 exports.getUserRecord = (req, res) => {
   const userId = req.params.id;
   const permission = "get user"
-  confirmPermission(req, permission)
+  confirmPermission(res, req, permission)
   .then(()=>{
 
      const sql = `SELECT * FROM user WHERE user_id = ${userId}`;
