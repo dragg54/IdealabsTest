@@ -3,7 +3,7 @@ const { sqlConnection } = require("../db/dbconnection");
 const validateUserInput = (name, email, password, phone, role_id) => {
   let inputError = {};
 
-  if (!email || !name || !phone || !password) {
+  if (!email || !name || !phone || !password || !role_id) {
     inputError.fieldError = "field can't be empty";
   }
 
