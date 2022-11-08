@@ -107,7 +107,7 @@ exports.addRolePermission = (req, res) => {
   const roleId = req.params.id;
   const permission = req.body.permission;
   const permit = "add role to permission";
-  confirmPermission(req)
+  confirmPermission(re, permission)
     .then(() => {
       const sql = `SELECT permission_id FROM permission WHERE permission_name = "${permission}"`;
       sqlConnection.query(sql, (err, rows, fields) => {

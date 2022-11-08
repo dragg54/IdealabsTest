@@ -110,7 +110,7 @@ exports.deleteUser = (req, res) => {
 exports.updateUser = (req, res) => {
   let { name, email, password, phone, roleId } = req.body;
   const permission = "update user"
-  confirmPermission(req, req.user.roleId)
+  confirmPermission(req, permission)
     .then(() => {
       const sql = `UPDATE user SET name = "${name}", email= "${email}", password = "${password}", phone = "${phone}", role_id = ${roleId} WHERE group_id = ${groupId}`;
       sqlConnection.query(sql, (err, rows, fields) => {

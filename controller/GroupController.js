@@ -111,7 +111,6 @@ exports.addUserToGroup = (req, res) => {
   const groupId = req.params.id;
   const member = req.body.userId;
   const permission = "add user to group"
-
   confirmPermission(req, permission)
   .then(()=>{
     duplicateGroupMemberChecker(member, groupId)
