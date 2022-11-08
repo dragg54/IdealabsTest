@@ -8,7 +8,7 @@ exports.createRole = (req, res) => {
   const permission = "create role";
   const fieldError = validateRoleInput(roleName);
   if (fieldError === null) {
-    confirmPermission(req.user.roleId, permission).then(() => {
+    confirmPermission(req, permission).then(() => {
       duplicateRoleChecker(roleName)
         .then(() => {
           const sql = `INSERT INTO role(role_name, user_id) values("${roleName}", "${userId}")`;
@@ -34,7 +34,7 @@ exports.createRole = (req, res) => {
 exports.getRoleById = (req, res) => {
   const roleId = req.params.id;
   const permission = "get role";
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
     .then(() => {
       const sql = `SELECT * FROM role WHERE role_id = ${roleId}`;
       sqlConnection.query(sql, (err, rows, fields) => {
@@ -52,7 +52,7 @@ exports.getRoleById = (req, res) => {
 exports.getAllRoles = (req, res) => {
   const sql = `SELECT * FROM role`;
   const permission = "get role";
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
     .then(() => {
       sqlConnection.query(sql, (err, rows, fields) => {
         if (!err) res.status(302).send(rows);
@@ -70,7 +70,7 @@ exports.updateRole = (req, res) => {
   let { name, user_id } = req.body;
   const permission = "update role";
   const roleId = req.params.id;
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
     .then(() => {
       const sql = `UPDATE role SET role_name = "${name}", user_id=${user_id} WHERE role_id=${roleId}`;
       sqlConnection.query(sql, (err, rows, fields) => {
@@ -88,7 +88,7 @@ exports.updateRole = (req, res) => {
 exports.deleteRole = (req, res) => {
   const roleId = req.params.id;
   const permission = "delete role";
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
     .then(() => {
       const sql = `DELETE FROM role WHERE role_id = ${roleId} `;
       sqlConnection.query(sql, (err, rows, fields) => {
@@ -107,7 +107,7 @@ exports.addRolePermission = (req, res) => {
   const roleId = req.params.id;
   const permission = req.body.permission;
   const permit = "add role to permission";
-  confirmPermission(req.user.roleId)
+  confirmPermission(req)
     .then(() => {
       const sql = `SELECT permission_id FROM permission WHERE permission_name = "${permission}"`;
       sqlConnection.query(sql, (err, rows, fields) => {
@@ -131,7 +131,7 @@ exports.deleteRolePermission = (req, res) => {
   const roleId = req.params.id;
   const permisson = "delete permission from role";
   const permissionId = req.body.permission;
-  confirmPermission(req.user.roleId, permission).then(() => {
+  confirmPermission(req, permisson).then(() => {
     const sql = `DELETE FROM rolepermission WHERE permission_id = ${permissionId}, (err, rows, fields)=>{
         if(err) throw err
         res.status(200).send("permission deleted from role")

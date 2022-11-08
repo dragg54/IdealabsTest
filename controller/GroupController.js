@@ -12,7 +12,7 @@ exports.createGroup = (req, res) => {
   const fieldError = validateGroupInput(groupName);
   const permission = "create group"
   if (fieldError === null) {
-    confirmPermission(req.user.userId, permission)
+    confirmPermission(req, permission)
     .then(()=>{
        duplicateGroupChecker(groupName)
          .then(() => {
@@ -35,7 +35,7 @@ exports.createGroup = (req, res) => {
 exports.getAllGroup = (req, res) => {
   const sql = `SELECT * FROM grp`;
   const permission = "get group"
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
   .then(()=>{
      sqlConnection.query(sql, (err, rows, fields) => {
        if (!err) res.status(302).send(rows);
@@ -52,7 +52,7 @@ exports.getAllGroup = (req, res) => {
 exports.getGroupById = (req, res) => {
   const groupId = req.params.id;
   const permission = "get group"
-  confirmPermission(req.user.roleId)
+  confirmPermission(req, permission)
   .then(()=>{
      const sql = `SELECT * FROM role WHERE group_id = ${groupId}`;
      sqlConnection.query(sql, (err, rows, fields) => {
@@ -72,7 +72,7 @@ exports.updateGroup = (req, res) => {
   let { name } = req.body;
   let { groupId } = req.params.id;
   const permission = "update group"
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
   .then(()=>{
      const sql = `UPDATE grp SET name = "${name}" WHERE group_id = ${groupId}`;
      sqlConnection.query(sql, (err, rows, fields) => {
@@ -91,7 +91,7 @@ exports.updateGroup = (req, res) => {
 exports.deleteGroup = (req, res) => {
   const groupId = req.params.id;
   const permission = "delete group"
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
   .then(()=>{
      const sql = `DELETE FROM grp WHERE group_id = ${groupId} `;
      sqlConnection.query(sql, (err, rows, fields) => {
@@ -112,7 +112,7 @@ exports.addUserToGroup = (req, res) => {
   const member = req.body.userId;
   const permission = "add user to group"
 
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
   .then(()=>{
     duplicateGroupMemberChecker(member, groupId)
       .then(() => {
@@ -139,7 +139,7 @@ exports.getMember = (req, res) => {
   const groupId = req.params.id;
   const sql = `SELECT user_id from usergroup WHERE group_id = ${groupId}`;
   const permission = "get member"
- confirmPermission(req.user.roleId, permission)
+ confirmPermission(req, permission)
  .then(()=>{
    sqlConnection.query(sql, (err, rows, fields) => {
      if (err) throw err;
@@ -153,7 +153,7 @@ exports.getMember = (req, res) => {
 exports.deleteMember = (req, res) => {
   const groupId = req.params.id;
   const permission = "delete member"
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
   .then(()=>{
      const sql = `DELETE from usergroup WHERE group_id = ${groupId}`;
      sqlConnection.query(sql, (err, rows, fields) => {

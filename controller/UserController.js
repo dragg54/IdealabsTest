@@ -51,13 +51,12 @@ let { name, email, password, phone, roleId } = req.body;
 //get all users records
 exports.getAllUserRecord = (req, res) => {
   const permission = "get user"
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
     .then(() => {
       const sql = `SELECT * FROM user`;
       sqlConnection.query(sql, (err, rows, fields) => {
         if (!err) {
           res.status(302).send(rows);
-          console.log(req.user);
         }
       });
     })
@@ -65,16 +64,18 @@ exports.getAllUserRecord = (req, res) => {
       res
         .status(401)
         .send(err);
-    });
- 
+    }).catch((err)=>{
+      res.status(409).send(err)
+    })
 };
 
 //get a user record
 exports.getUserRecord = (req, res) => {
   const userId = req.params.id;
   const permission = "get user"
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
   .then(()=>{
+
      const sql = `SELECT * FROM user WHERE user_id = ${userId}`;
      sqlConnection.query(sql, (err, rows, fields) => {
        if (!err && rows.length > 0) res.status(302).send(rows);
@@ -92,7 +93,7 @@ exports.getUserRecord = (req, res) => {
 exports.deleteUser = (req, res) => {
   const userId = req.params.id;
   const permission = "delete user"
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
     .then(() => {
       const sql = `DELETE FROM user WHERE user_id= ${userId}`;
       sqlConnection.query(sql, (err, rows, fields) => {
@@ -130,8 +131,8 @@ exports.loginUser = (req, res) => {
   sqlConnection.query(
     `SELECT * FROM user WHERE email = "${email}"`,
     (err, rows, fields) => {
+      console.log(rows)
       const response = JSON.stringify(rows[0])
-      console.log(JSON.parse(response).password)
       bcrypt.compare(password, JSON.parse(response).password, (err, isMatch) => {
         if (err) res.send(err);
         if (isMatch) {
