@@ -13,7 +13,7 @@ exports.createUser = (req, res) => {
 let { name, email, password, phone, roleId } = req.body;
   let fieldError = validateUserInput(name, email, password, phone, roleId);
   const permission = "create user";
-  confirmPermission(req.user.roleId, permission)
+  confirmPermission(req, permission)
   .then(()=>{
     sqlConnection.query("select * from user", (err, rows, fields) => {
       if (fieldError === null) {
