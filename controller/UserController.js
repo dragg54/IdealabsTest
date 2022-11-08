@@ -13,7 +13,7 @@ exports.createUser = (req, res) => {
 let { name, email, password, phone, roleId } = req.body;
   let fieldError = validateUserInput(name, email, password, phone, roleId);
   const permission = "create user";
-  confirmPermission(req, req.user.roleId, permission)
+  confirmPermission(req.user.roleId, permission)
   .then(()=>{
     sqlConnection.query("select * from user", (err, rows, fields) => {
       if (fieldError === null) {
@@ -51,7 +51,7 @@ let { name, email, password, phone, roleId } = req.body;
 //get all users records
 exports.getAllUserRecord = (req, res) => {
   const permission = "get user"
-  confirmPermission(req, req.user.roleId, permission)
+  confirmPermission(req.user.roleId, permission)
     .then(() => {
       const sql = `SELECT * FROM user`;
       sqlConnection.query(sql, (err, rows, fields) => {
@@ -73,7 +73,7 @@ exports.getAllUserRecord = (req, res) => {
 exports.getUserRecord = (req, res) => {
   const userId = req.params.id;
   const permission = "get user"
-  confirmPermission(req, req.user.roleId)
+  confirmPermission(req.user.roleId, permission)
   .then(()=>{
      const sql = `SELECT * FROM user WHERE user_id = ${userId}`;
      sqlConnection.query(sql, (err, rows, fields) => {
@@ -92,7 +92,7 @@ exports.getUserRecord = (req, res) => {
 exports.deleteUser = (req, res) => {
   const userId = req.params.id;
   const permission = "delete user"
-  confirmPermission(req, req.user.roleId)
+  confirmPermission(req.user.roleId, permission)
     .then(() => {
       const sql = `DELETE FROM user WHERE user_id= ${userId}`;
       sqlConnection.query(sql, (err, rows, fields) => {

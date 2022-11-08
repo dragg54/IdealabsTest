@@ -9,14 +9,14 @@ CREATE TABLE user(
     role_id AUTO_INCREMENT,
     password VARCHAR(20) NOT NULL,
     phone VARCHAR(20),
-    FOREIGN KEY(role_id), REFERENCES role(role_id)
+    FOREIGN KEY(role_id), REFERENCES role(role_id) ON DELETE CASCADE
 )
 
 CREATE TABLE role(
     role_id INT PRIMARY KEY AUTO INCREMENT,
     user_id INT,
     role_name VARCHAR(20),
-    FOREIGN KEY(user_is) REFERENCES user(user_id)
+    FOREIGN KEY(user_is) REFERENCES user(user_id)ON DELETE CASCADE
 )
 
 CREATE TABLE grp(
@@ -33,13 +33,13 @@ CREATE TABLE rolepermission(
     role_id INT ,
     permission_id INT,
     FOREIGN KEY(role_id) REFERENCES role(role_id),
-    FOREIGN KEY(permission_id) REFERENCES permission_id
+    FOREIGN KEY(permission_id) REFERENCES permission_id ON DELETE CASCADE
 )
 
 CREATE TABLE usergroup(
     useer_id INT ,
     group_id INT,
-    FOREIGN KEY(user_id) REFERENCES user(user_id),
-    FOREIGN KEY(group_id) REFERENCES group(group_id)
+    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE, 
+    FOREIGN KEY(group_id) REFERENCES group(group_id) ON DELETE CASCADE
 )
 
